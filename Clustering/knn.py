@@ -1,3 +1,4 @@
+from asyncore import loop
 import pandas as pd
 import numpy as np
 from tqdm import tqdm
@@ -73,6 +74,7 @@ class KNN():
 
             # break condition
             if not change:
+                looper.set_description_str(f'Fitting KNN for k={k} done at #{iter+1}')
                 break
 
         return df
@@ -94,12 +96,35 @@ class KNN():
         return np.sqrt(((x1-x2)**2).sum())
 
 if __name__ == "__main__":
-    df = pd.DataFrame(data=[[1, 1], 
-                            [2, 2], 
-                            [3, 3], 
-                            [4, 4],
-                            [100, 100],
-                            [104, 102]], columns=['x', 'y'])
+    # performance test
+    from sklearn.datasets import make_blobs
+    from sklearn.metrics import silhouette_score
+    from sklearn.cluster import KMeans
+    import time
+
+    print("Performance test for 1000 data points with 2 features and 5 groups")
+    # generate data
+    X, y = make_blobs(n_samples=1000, centers=5, n_features=2, random_state=0)
+    df = pd.DataFrame(X, columns=['x1', 'x2'])
+    df['label'] = y
+
+    # KNN
+    start = time.time()
     knn = KNN()
-    knn.fit(df, 2, inplace=True)
-    print(df)
+    knn.fit(df, k=5, explain=False)
+    end = time.time()
+    print(f"KNN time : {end-start}")
+    print(f"KNN score : {silhouette_score(df.iloc[:, :-1], df['label'])}")
+
+    # KMeans
+    start = time.time()
+    kmeans = KMeans(n_clusters=5, n_init=10)
+    kmeans.fit(df.iloc[:, :-1])
+    end = time.time()
+    print(f"KMeans time : {end-start}")
+    print(f"KMeans score : {silhouette_score(df.iloc[:, :-1], kmeans.labels_)}")
+
+    # plot
+    import matplotlib.pyplot as plt
+    plt.scatter(df['x1'], df['x2'], c=df['label'])
+    plt.show()
