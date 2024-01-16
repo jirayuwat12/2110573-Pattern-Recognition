@@ -19,3 +19,4 @@ threadpoolctl==3.2.0
 tqdm==4.66.1
 tzdata==2023.4
 zipp==3.17.0
+ppyPatternRecognition
