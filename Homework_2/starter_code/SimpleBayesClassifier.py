@@ -19,10 +19,10 @@ class SimpleBayesClassifier:
         None: This method does not return anything as it is a constructor.
         """
 
-        self.n_pos =
-        self.n_neg =
-        self.prior_pos = 
-        self.prior_neg =
+        self.n_pos = n_pos
+        self.n_neg = n_neg
+        self.prior_pos = n_pos / (n_pos+n_neg)
+        self.prior_neg = n_neg / (n_pos+n_neg)
 
     def fit_params(self, x, y, n_bins = 10):
 
