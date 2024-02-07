@@ -84,7 +84,7 @@ class SimpleBayesClassifier:
         for i in range(x.shape[0]):
             h = np.log(self.prior_pos) - np.log(self.prior_neg)
             for j in range(x.shape[1]):
-                if x[i, j] is np.nan:
+                if np.isnan(x[i, j]):
                     continue
                 stay_bin_idx = np.digitize(x[i, j], self.stay_params[j][1]) - 1
                 leave_bin_idx = np.digitize(x[i, j], self.leave_params[j][1]) - 1
@@ -148,7 +148,7 @@ class SimpleBayesClassifier:
         for idx in range(x.shape[0]):
             h = np.log(self.prior_pos) - np.log(self.prior_neg)
             for j in range(x.shape[1]):
-                if x[idx, j] is np.nan:
+                if np.isnan(x[idx, j]):
                     continue
                 stay_mean, stay_std = self.gaussian_stay_params[j]
                 leave_mean, leave_std = self.gaussian_leave_params[j]
